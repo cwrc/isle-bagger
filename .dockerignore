@@ -1,0 +1,7 @@
+build.gradle.kts
+Dockerfile
+README.md
+tests
+tests/**/*
+rootfs-php7-bagger
+rootfs-php8.1

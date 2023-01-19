@@ -1,0 +1,53 @@
+##
+# Deployment of the Islandora Bagger container 
+##
+
+secrets:
+  UID:
+    file: ./custom/secrets/UID
+  GID:
+    file: ./custom/secrets/UID
+  BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD:
+    file: ./custom/secrets/DRUPAL_DEFAULT_ACCOUNT_PASSWORD
+  BAGGER_DRUPAL_DEFAULT_DB_PASSWORD:
+    file: ./custom/secrets/DRUPAL_DEFAULT_DB_PASSWORD
+
+volumes:
+  bagger-data: {}
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+# Common build settings
+x-build-common: &build-common
+  args:
+    repository: ${ISLE_REPOSITORY}
+    tag: ${ISLE_TAG}
+  x-bake:
+    platforms:
+      - linux/amd64
+      - linux/arm64
+
+services:
+
+  bagger:
+    <<: *common
+    build:
+      <<: *build-common
+      #context: ./bagger/
+      context: .
+    environment:
+      BAGGER_CROND_ENABLE_SERVICE: "false"
+      BAGGER_CROND_SCHEDULE: "1 2 * * *"
+      BAGGER_BAG_DOWNLOAD_PREFIX: ""  # unused
+    image: ${REPOSITORY}/bagger:${TAG}
+    ports: 
+      - 9856:8000
+    secrets:
+      - source: UID
+      - source: GID
+      - source: BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD
+      - source: BAGGER_DRUPAL_DEFAULT_DB_PASSWORD
+    volumes:
+      - bagger-data:/var/www/bagger/var

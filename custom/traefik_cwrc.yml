@@ -1,0 +1,32 @@
+# File provider: dynamically loaded routers, middleware, and providers
+
+http:
+
+  middlewares:
+
+    secure:
+      headers:
+        sslRedirect: true
+        forceSTSHeader: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        browserXssFilter: true
+        contentSecurityPolicy: "default-src https:"
+        contentTypeNosniff: true
+        frameDeny: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+        featurePolicy: "camera 'none'; microphone 'none'; payment 'none'; speaker 'none'; usb 'none'; vibrate 'none'; "
+        # Enable to prevent ssl redirect and STS Header enforcment
+        # ToDo: production disable to enfore redirect
+        #isDevelopment: true
+
+tls:
+  options:
+    default:
+      #minVersion: VersionTLS13
+      #minVersion: VersionTLS13
+      # for cantaloupe isle-buildkit 1.0.10 (Nov 2022), TLS 1.1 required otherwise "javax.net.ssl.SSLException: Received fatal alert: protocol_version"
+      # https://stackoverflow.com/questions/16541627/javax-net-ssl-sslexception-received-fatal-alert-protocol-version
+      minVersion: VersionTLS11
+      #sniStrict: true
