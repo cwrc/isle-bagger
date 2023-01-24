@@ -14,7 +14,7 @@ RUN --mount=type=cache,id=composer-apk,sharing=locked,from=cache,target=/var/cac
     echo '' > /root/.ash_history
 
 # PHP 8.1
-ARG COMMIT="39eae4fc44abdce019c81a20f4b7457c0c14e926"
+ARG COMMIT="737da1b5a531cad5903a62317142c5f5d90f27c2"
 ARG BAGGER_URL="https://github.com/jefferya/islandora_bagger.git"
 
 RUN --mount=type=cache,id=bagger-composer,sharing=locked,target=/root/.composer/cache \
@@ -39,16 +39,29 @@ ENV \
     BAGGER_APP_ENV=dev \
     BAGGER_APP_SECRET=f58c87e1d737c4422b45ba4310abede5 \
     BAGGER_BAG_DOWNLOAD_PREFIX=https://islandora.traefik.me/bags/ \
-    BAGGER_CROND_ENABLE_SERVICE=false \
+    BAGGER_CROND_ENABLE_SERVICE="false" \
+    BAGGER_CROND_LOG_LEVEL="0" \
     BAGGER_CROND_SCHEDULE="1 2 * * *" \
     BAGGER_DRUPAL_URL=https://drupal \
     BAGGER_DRUPAL_DEFAULT_ACCOUNT_NAME=admin \
     BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD=password \
     BAGGER_LOCATION_LOG_PATH="%kernel.project_dir%/var/islandora_bagger.locations" \
     BAGGER_LOG_LEVEL=info \
+    BAGGER_APP_DIR="/var/www/bagger"  \
+    BAGGER_QUEUE_PATH="/var/www/bagger/var/islandora_bagger.queue" \
     BAGGER_OUTPUT_DIR="%kernel.project_dir%/var/output" \
-    BAGGER_QUEUE_PATH="%kernel.project_dir%/var/islandora_bagger.queue" \
-    BAGGER_TEMP_DIR="%kernel.project_dir%/var/tmp" 
+    BAGGER_TEMP_DIR="%kernel.project_dir%/var/tmp" \
+    BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA="false" \
+    BAGGER_DEFAULT_PER_BAG_NAME="nid" \
+    BAGGER_DEFAULT_PER_BAG_NAME_TEMPLATE="aip_%" \
+    BAGGER_DEFAULT_PER_BAG_SERIALIZE="zip" \
+    BAGGER_DEFAULT_PER_BAG_CONTACT_NAME="Contact" \
+    BAGGER_DEFAULT_PER_BAG_CONTACT_EMAIL="Contact email" \
+    BAGGER_DEFAULT_PER_BAG_SOURCE_ORGANIZATION="Source organization" \
+    BAGGER_DEFAULT_PER_BAG_HTTP_TIMEOUT=120 \
+    BAGGER_DEFAULT_PER_BAG_DELETE_SETTINGS_FILE="false" \
+    BAGGER_DEFAULT_PER_BAG_LOG_BAG_CREATION="true" \
+    BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION="false"
 
 WORKDIR /var/www/
 

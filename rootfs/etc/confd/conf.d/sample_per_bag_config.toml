@@ -1,0 +1,7 @@
+[template]
+src = "sample_per_bag_config.yaml.tmpl"
+dest = "/var/www/bagger/var/sample_per_bag_config.yaml"
+uid = 100
+gid = 101
+mode = "0644"
+keys = [ "/" ]

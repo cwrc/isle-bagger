@@ -4,5 +4,5 @@ set -e
 
 # Only run the service if explicitly told to do so.
 if [[ "${BAGGER_CROND_ENABLE_SERVICE}" == "true" ]]; then
-  exec crond -f -l "${BAGGER_CROND_LOG_LEVEL}" -d "${BAGGER_CROND_LOG_LEVEL}"
+  exec crond -f -l "${BAGGER_CROND_LOG_LEVEL}" -L /dev/stdout
 fi

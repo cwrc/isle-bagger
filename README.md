@@ -6,27 +6,49 @@ Produces archival information packages, [Bags](https://en.wikipedia.org/wiki/Bag
 
 ## Dependencies
 
-Requires `islandora/nginx` docker image to build. Please refer to the
-[Nginx Image README](../nginx/README.md) for additional information including
+Requires `islandora/nginx` Isle Buildkit image to build. Please refer to the
+[Nginx Image README](https:w
+://github.com/Islandora-DevOps/Isle-Buildkit/tree/main/nginx) for additional information including
 additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable                   | Confd Key | Default                                               | Description                                                                                                      |
-|:---------------------------------------|:----------|:------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------|
-| BAGGER_APP_ENV                         |           | dev                                                   | PHP Symphony app environment (dev, prod, test)                                                                   |
-| BAGGER_QUEUE_PATH                      |           | '%kernel.project_dir%/var/islandora_bagger.queue'     | Location of the queue                                                                                            |
-| BAGGER_LOCATION_LOG_PATH               |           | '%kernel.project_dir%/var/islandora_bagger.locations' | Location of the bag log path                                                                                     |
-| BAGGER_APP_SECRET                      |           | 123                                                   | PHP Symphony app secret                                                                                          |
-| BAGGER_CROND_ENABLE_SERVICE            |           | false                                                 | Enable scheduled job managed by cron to process the queue                                                        |
-| BAGGER_CROND_SCHEDULE                  |           | 1 2 * * *                                             | Define the schedule of the queue processor                                                                       |
-| BAGGER_BAG_DOWNLOAD_PREFIX             |           | https://islandora.traefik.me/bags/                    | The hostname/path to where users can download serialized bags. From config/services.yaml app.bag.download.prefix |
-| BAGGER_DRUPAL_URL                      |           | https://drupal                                        | URL of the Drupal app                                                                                            |
-| BAGGER_DRUPAL_DEFAULT_ACCOUNT_NAME     |           | admin                                                 | Drupal user account                                                                                              |
-| BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD |           | password                                              | Drupal user password                                                                                             |
-| BAGGER_LOG_LEVEL                       |           | info                                                  | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none                |
-| BAGGER_CROND_LOG_LEVEL                 |           | info                                                  | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none                |
+| Environment Variable                                | Confd Key | Default                                               | Description                                                                                                      |
+|:----------------------------------------------------|:----------|:------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------|
+| BAGGER_APP_ENV                                      |           | dev                                                   | PHP Symphony app environment (dev, prod, test)                                                                   |
+| BAGGER_QUEUE_PATH                                   |           | '%kernel.project_dir%/var/islandora_bagger.queue'     | Location of the queue                                                                                            |
+| BAGGER_LOCATION_LOG_PATH                            |           | '%kernel.project_dir%/var/islandora_bagger.locations' | Location of the bag log path                                                                                     |
+| BAGGER_APP_SECRET                                   |           | 123                                                   | PHP Symphony app secret                                                                                          |
+| BAGGER_CROND_LOG_LEVEL |           | 0                                                 | crond log level                                                        |
+| BAGGER_CROND_ENABLE_SERVICE                         |           | false                                                 | Enable scheduled job managed by cron to process the queue                                                        |
+| BAGGER_CROND_SCHEDULE                               |           | 1 2 * * *                                             | Define the schedule of the queue processor                                                                       |
+| BAGGER_BAG_DOWNLOAD_PREFIX                          |           | https://islandora.traefik.me/bags/                    | The hostname/path to where users can download serialized bags. From config/services.yaml app.bag.download.prefix |
+| BAGGER_DRUPAL_URL                                   |           | https://drupal                                        | URL of the Drupal app                                                                                            |
+| BAGGER_DRUPAL_DEFAULT_ACCOUNT_NAME                  |           | admin                                                 | Drupal user account                                                                                              |
+| BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD              |           | password                                              | Drupal user password                                                                                             |
+| BAGGER_LOG_LEVEL                                    |           | info                                                  | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none                |
+| BAGGER_CROND_LOG_LEVEL                              |           | info                                                  | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none                |
+| BAGGER_OUTPUT_DIR                                   |           | "%kernel.project_dir%/var/output"                     | Path to store generated archival information packages (bags)|
+| BAGGER_QUEUE_PATH                                   |           | "%kernel.project_dir%/var/islandora_bagger.queue"     | Path to the queue file |
+| BAGGER_TEMP_DIR                                     |           | "%kernel.project_dir%/var/tmp"                        | Path to the temp directory |
+| BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA |           | false                                                 | Register creation of this Bag with Islandora Bagger Integration |
+| BAGGER_DEFAULT_PER_BAG_NAME                         |           | "nid"                                                 | How to name the Bag directory (or file if serialized). One of 'nid' or 'uuid'|
+| BAGGER_DEFAULT_PER_BAG_NAME_TEMPLATE                |           | "aip_%"                                               | Template for the Bag name. The % is replaced by the nid or uuid (depending on the value of "bag_name")|
+| BAGGER_DEFAULT_PER_BAG_SERIALIZE                    |           | "zip"                                                 | Whether or not to zip up the Bag. One of 'false', 'zip', or 'tgz' |
+| BAGGER_DEFAULT_PER_BAG_CONTACT_NAME                 |           | "Contact"                                             | Bag-info: contact name |
+| BAGGER_DEFAULT_PER_BAG_CONTACT_EMAIL                |           | "Contact email"                                       | Bag-info: contact email |
+| BAGGER_DEFAULT_PER_BAG_SOURCE_ORGANIZATION          |           | "Source organization"                                 | Bag-info: source organization |
+| BAGGER_DEFAULT_PER_BAG_HTTP_TIMEOUT                 |           | 120                                                   | Timeout (sec) when downloading the components that comprise a Bag |
+| BAGGER_DEFAULT_PER_BAG_DELETE_SETTINGS_FILE         |           | "false"                                               | Per Bag settings file: delete after use |
+| BAGGER_DEFAULT_PER_BAG_LOG_BAG_CREATION             |           | "true"                                                | Log the serialized Bag's creation |
+| BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION             |           | "false"                                               | Log the serialized Bag's location to allow retrieval of the Bag's download URL (if applicable) |
 
+
+----
+
+## Notes
+
+* During container startup, a sample per bag config (`var/sample_per_bag_config.yaml`) is generated to work with the generated `config/services.yaml` for use with testing the command-line `create_bag`.
 
 ## Test
 
@@ -41,14 +63,10 @@ ToDo: revise
 * test if per bag config can override location in the per config/services.yml. Also set in the crontab to override any overrides in the per bag
 * addMedia fix (https://github.com/mjordan/islandora_bagger/pull/89)
 * turn on ability to log preservation event in Drupal
-* toml to create sample per bag config (point to volume)
+* toml to create sample per bag config (point to volume) - "sample.config.yaml" as a template
 * Add Drupal Context to automate creation
 * post-bag plugin attach to OLRC
 
-Setup Bagger Container (temp)
-```
-docker compose cp custom/secrets/sample.config.yaml bagger:/var/www/sample.config.yaml`
-```
 
 Setup Drupal - Delete Me:
 ```
@@ -62,6 +80,10 @@ drush cache-rebuild
 ```
 
 
+Setup Bagger Container (temp)
+```
+docker compose cp custom/secrets/sample.config.yaml bagger:/var/www/sample.config.yaml`
+```
 
 Test:
 ```
@@ -69,13 +91,14 @@ curl  -H "Accept: application/json" 'https://cc-130.cwrc.ca/user/login?_format=x
 
 Create Bag:
 ```
-./bin/console app:islandora_bagger:create_bag -vvv --settings=../sample.config.yaml --node=47
+./bin/console app:islandora_bagger:create_bag -vvv --settings=var/sample_per_bag_config.yaml --node=47
 ```
 
 Queue item:
-```
-curl -v -X POST -H "Islandora-Node-ID: 48" --data-binary "@/var/www/sample.config.yaml" http://12
-7.0.0.1:8000/api/createbag
+``` bash
+curl -v -X POST -H "Islandora-Node-ID: 48" --data-binary "@${BAGGER_APP_DIR}/var/sample_per_bag_config.yaml" http://127.0.0.1:8000/api/createbag
+
+cd ${BAGGER_APP_DIR} && ./bin/console app:islandora_bagger:process_queue --queue=${BAGGER_QUEUE_PATH}
 ```
 
 

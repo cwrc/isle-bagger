@@ -6,7 +6,7 @@ function setup_cron {
     if [[ "${BAGGER_CROND_ENABLE_SERVICE}" == "true" ]]; then
         cat <<EOF | crontab -u nginx -
 # min   hour    day     month   weekday command
-${BAGGER_CROND_SCHEDULE}        process-queue.sh --settings=/var/www/bagger/cron_config.yml
+${BAGGER_CROND_SCHEDULE}        cd ${BAGGER_APP_DIR} && ./bin/console app:islandora_bagger:process_queue --queue=${BAGGER_QUEUE_PATH}
 EOF
     fi
 }
