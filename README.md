@@ -54,19 +54,23 @@ additional settings, volumes, ports, etc.
 
 ToDo: revise
 
-* test: cron queue processing, requests from Drupal Context to preserve 
 * adjust logs toml: one for prod and dev conf.d (having log in root of package does not work)
 * permissions wrong (if APP_ENV set to prod)
+* automate list generation of resources to preserve and informing islandora_bagger (rough idea: gather modify dates from Drupal resources and compare against modify dates (or hash?) in the islandora_bagger_integration bag log and if differ than add to a list to preserve  )
+* post-bag plugin attach to OLRC
+* automate image generation
+* 
+
+ToDo: Test further
+* test: cron queue processing, requests from Drupal Context to preserve 
 * Add application wide config option config/service.yml (instead of per bag config)
   * bag location (temp_dir, output_dir) and queue location (not bagger/var) to a persistent volume 
   * add Drupal username/password to service file (see readme option) so don't have to add to the per bag configuration and store on Drupal site as per Bagger integration readme
 * test if per bag config can override location in the per config/services.yml. Also set in the crontab to override any overrides in the per bag
 * addMedia fix (https://github.com/mjordan/islandora_bagger/pull/89)
-* turn on ability to log preservation event in Drupal
+* turn on ability to log preservation event in Drupal (https://github.com/mjordan/islandora_bagger_integration/pull/31)
 * toml to create sample per bag config (point to volume) - "sample.config.yaml" as a template
-* Add Drupal Context to automate creation
-* post-bag plugin attach to OLRC
-
+* convert yaml_path to an env (where the per bag configuration stored on web requests for preservation - https://github.com/mjordan/islandora_bagger/blob/1b4973023d0ace40633c79340077980b3be7c947/src/Controller/IslandoraBaggerController.php#L26
 
 Setup Drupal - Delete Me:
 ```
