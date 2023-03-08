@@ -72,7 +72,7 @@ ToDo: Test further
 * toml to create sample per bag config (point to volume) - "sample.config.yaml" as a template
 * convert yaml_path to an env (where the per bag configuration stored on web requests for preservation - https://github.com/mjordan/islandora_bagger/blob/1b4973023d0ace40633c79340077980b3be7c947/src/Controller/IslandoraBaggerController.php#L26
 
-## Setup Drupal - Delete Me:
+## Setup Drupal:
 ```
 composer require 'drupal/getjwtonlogin:^2.0'
 cd web/modules/contrib/
