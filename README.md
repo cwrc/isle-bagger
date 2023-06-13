@@ -48,31 +48,38 @@ additional settings, volumes, ports, etc.
 
 ## Notes
 
-* During container startup, a sample per bag config (`var/sample_per_bag_config.yaml`) is generated to work with the generated `config/services.yaml` for use with testing the command-line `create_bag`.
+This container makes several opinionated assumptions about how one installs and interact with the wide range of options available with [Islandora Bagger]. Some of the opinionated options are meantioned in this section, see [Dockerfile](./Dockerfile), [conf.d templates](./rootfs/etc/confd/), 
+
+* During container startup, a default per bag config (`var/sample_per_bag_config.yaml`) is created to work with the generated `config/services.yaml` for use with testing the command-line `create_bag`.
+* An application wide config, `config/service.yml` is generated during startup to reduce the need for a per bag config 
+  * Set the bag location (temp_dir, output_dir) and queue location (not bagger/var) to a persistent volume 
+  * Add Drupal username/password to service file (see readme option) so don't have to add to the per bag configuration and store on Drupal site as per Bagger integration readme
+* Logging configuration templates to output to stdout/stderr: one for prod and dev conf.d (having log in root of packages directory does not work)
+* Optional queue processing via cron (via environment variables: BAGGER_CROND_*)
+* Doesn't enable the "REST API to get a serialized Bag's location for download"
+* Defaults to add media to the Bags, see the addMedia fix (https://github.com/mjordan/islandora_bagger/pull/89)
+* turn on ability to register preservation bag creation with Drupal/Islandora (https://github.com/mjordan/islandora_bagger_integration/pull/31) via `BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA`
 
 ## Test
 
 ToDo: revise
 
-* adjust logs toml: one for prod and dev conf.d (having log in root of package does not work)
 * permissions wrong (if APP_ENV set to prod)
 * automate list generation of resources to preserve and informing islandora_bagger (rough idea: gather modify dates from Drupal resources and compare against modify dates (or hash?) in the islandora_bagger_integration bag log and if differ than add to a list to preserve  )
 * post-bag plugin attach to OLRC
-* automate image generation
-* 
+* automate OCI image generation and upload to an image repository
 
 ToDo: Test further
-* test: cron queue processing, requests from Drupal Context to preserve 
-* Add application wide config option config/service.yml (instead of per bag config)
-  * bag location (temp_dir, output_dir) and queue location (not bagger/var) to a persistent volume 
-  * add Drupal username/password to service file (see readme option) so don't have to add to the per bag configuration and store on Drupal site as per Bagger integration readme
+
+* Test: Drupal Context that sends requests to the Bagger REST API to queue a preservation request 
 * test if per bag config can override location in the per config/services.yml. Also set in the crontab to override any overrides in the per bag
-* addMedia fix (https://github.com/mjordan/islandora_bagger/pull/89)
-* turn on ability to log preservation event in Drupal (https://github.com/mjordan/islandora_bagger_integration/pull/31)
-* toml to create sample per bag config (point to volume) - "sample.config.yaml" as a template
 * convert yaml_path to an env (where the per bag configuration stored on web requests for preservation - https://github.com/mjordan/islandora_bagger/blob/1b4973023d0ace40633c79340077980b3be7c947/src/Controller/IslandoraBaggerController.php#L26
+* `delete_settings_file`: when enabled add a preservation request is added to the queue multiple times (i.e., before the first is processed), the delete may cause an error in the second a subsequent entries in the queue about a missing settings file.
 
 ## Setup Drupal:
+
+See [Islandora Bagger] for the Drupal setup requirements. `getjwtonlogin` and `islandora_bagger_integration` are required. A quick way to add:
+
 ```
 composer require 'drupal/getjwtonlogin:^2.0'
 cd web/modules/contrib/
@@ -89,9 +96,9 @@ drush cache-rebuild
 docker compose cp custom/secrets/sample.config.yaml bagger:/var/www/sample.config.yaml`
 ```
 
-Test:
+Test setup of Drupal (login):
 ```
-curl  -H "Accept: application/json" 'https://cc-130.cwrc.ca/user/login?_format=xml'
+curl  -H "Accept: application/json" 'https://islanora.dev/user/login?_format=xml'
 
 Create Bag:
 ```
