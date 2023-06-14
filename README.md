@@ -6,7 +6,7 @@ Produces archival information packages, [Bags](https://en.wikipedia.org/wiki/Bag
 
 ## Dependencies
 
-Requires `islandora/nginx` Isle Buildkit image to build. Please refer to the
+Requires Docker v24+ and `islandora/nginx` Isle Buildkit image to build. Please refer to the
 [Nginx Image README](https:w
 ://github.com/Islandora-DevOps/Isle-Buildkit/tree/main/nginx) for additional information including
 additional settings, volumes, ports, etc.
@@ -58,7 +58,8 @@ This container makes several opinionated assumptions about how one installs and 
 * Optional queue processing via cron (via environment variables: BAGGER_CROND_*)
 * Doesn't enable the "REST API to get a serialized Bag's location for download"
 * Defaults to add media to the Bags, see the addMedia fix (https://github.com/mjordan/islandora_bagger/pull/89)
-* turn on ability to register preservation bag creation with Drupal/Islandora (https://github.com/mjordan/islandora_bagger_integration/pull/31) via `BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA`
+* Turn on ability to register preservation bag creation with Drupal/Islandora (https://github.com/mjordan/islandora_bagger_integration/pull/31) via `BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA`
+* Make no assumptions about setup infrastructure: assumes a proxy or edge router (see warnings about setup in [Islandora Bagger])
 
 ## Test
 
@@ -90,8 +91,18 @@ composer install
 drush cache-rebuild
 ```
 
+## run a local instance via Docker Compose
+
+* Create a local config for Docker Compose: `.env.sample` to `.env`
+* Update the .env with the Drupal/Islandora site domain and Drupal user
+* Add secret: Drupal account password (see docker-compose.yml) for location
+* Add other environment variables described above to the `.env`
+* `docker compose build`
+* `docker compose up -d` - assumes a proxy or edge router (see warnings about setup in [Islandora Bagger])
 
 ## Setup Bagger Container (temp)
+
+This step may be automated but in the case you want a custom config:
 ```
 docker compose cp custom/secrets/sample.config.yaml bagger:/var/www/sample.config.yaml`
 ```
@@ -112,6 +123,6 @@ curl -v -X POST -H "Islandora-Node-ID: 48" --data-binary "@${BAGGER_APP_DIR}/var
 cd ${BAGGER_APP_DIR} && ./bin/console app:islandora_bagger:process_queue --queue=${BAGGER_QUEUE_PATH}
 ```
 
-
+## References
 
 [Islandora Bagger]: https://github.com/mjordan/islandora_bagger

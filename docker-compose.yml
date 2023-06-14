@@ -9,8 +9,6 @@ secrets:
     file: ./custom/secrets/UID
   BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD:
     file: ./custom/secrets/DRUPAL_DEFAULT_ACCOUNT_PASSWORD
-  BAGGER_DRUPAL_DEFAULT_DB_PASSWORD:
-    file: ./custom/secrets/DRUPAL_DEFAULT_DB_PASSWORD
 
 volumes:
   bagger-data: {}
@@ -22,8 +20,8 @@ x-common: &common
 # Common build settings
 x-build-common: &build-common
   args:
-    repository: ${ISLE_REPOSITORY}
-    tag: ${ISLE_TAG}
+    REPOSITORY: ${ISLE_REPOSITORY:-islandora}
+    TAG: ${ISLE_TAG:-main}
   x-bake:
     platforms:
       - linux/amd64
@@ -59,6 +57,5 @@ services:
       - source: UID
       - source: GID
       - source: BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD
-      - source: BAGGER_DRUPAL_DEFAULT_DB_PASSWORD
     volumes:
       - bagger-data:/var/www/bagger/var

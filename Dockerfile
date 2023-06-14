@@ -1,12 +1,11 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=islandora
-ARG tag=latest
-ARG alpine=3.16.2
+# syntax=docker/dockerfile:1.5.1
+ARG REPOSITORY
+ARG TAG
 
-FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
+FROM --platform=$BUILDPLATFORM ${REPOSITORY}/nginx:${TAG}
 
 # Install packages and tools that allow for basic downloads.
-RUN --mount=type=cache,id=composer-apk,sharing=locked,from=cache,target=/var/cache/apk \
+RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add --no-cache \
         php81-intl \
         php81-zip \
@@ -14,23 +13,23 @@ RUN --mount=type=cache,id=composer-apk,sharing=locked,from=cache,target=/var/cac
     echo '' > /root/.ash_history
 
 # PHP 8.1
-ARG COMMIT="737da1b5a531cad5903a62317142c5f5d90f27c2"
-ARG BAGGER_URL="https://github.com/jefferya/islandora_bagger.git"
+ARG BAGGER_COMMIT="3266c6f03bb73e5fddfdc28dbd39f0b187073c91"
+ARG BAGGER_FILE=${BAGGER_COMMIT}.tar.gz
+ARG BAGGER_URL="https://github.com/jefferya/islandora_bagger/archive/${BAGGER_FILE}"
+ARG BAGGER_SHA256=086e12fcc0fb548a78773eb9dd0d1ab5431d53d8c472f56884083d0eac5dab07
 
-RUN --mount=type=cache,id=bagger-composer,sharing=locked,target=/root/.composer/cache \
-    --mount=type=cache,id=bagger-downloads,sharing=locked,target=/opt/downloads \
-    git-clone-cached.sh \
+RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
+    --mount=type=cache,id=bagger-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
         --url "${BAGGER_URL}" \
-        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
-        --commit "${COMMIT}" \
-        --worktree /var/www/bagger && \
+        --sha256 "${BAGGER_SHA256}" \
+        --strip \
+        --dest "/var/www/bagger" \
+    && \
     composer install -d /var/www/bagger
     # `--no-dev` leads to install error - ToDo revise composer.json 
     # APP_ENV=prod composer install -d /var/www/bagger --no-dev
     # composer install -d /var/www/bagger --no-dev
-
-FROM alpine:${alpine} AS cache
-FROM ${repository}/nginx:${tag}
 
 EXPOSE 8000
 
@@ -65,8 +64,7 @@ ENV \
 
 WORKDIR /var/www/
 
-COPY --chown=nginx:nginx --link --from=composer /var/www /var/www
-
+# requries v24+ of Docker
 COPY --chown=nginx:nginx --link rootfs /
 
-RUN find . ! -user nginx -exec chown nginx:nginx {} \;
+# RUN find /var/www/bagger ! -user nginx -exec chown nginx:nginx {} \;
