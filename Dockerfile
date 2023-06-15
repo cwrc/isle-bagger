@@ -67,4 +67,4 @@ WORKDIR /var/www/
 # requries v24+ of Docker
 COPY --chown=nginx:nginx --link rootfs /
 
-# RUN find /var/www/bagger ! -user nginx -exec chown nginx:nginx {} \;
+RUN find /var/www/bagger ! -user nginx -exec chown nginx:nginx {} \;
