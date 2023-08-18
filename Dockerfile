@@ -2,7 +2,7 @@
 ARG REPOSITORY
 ARG TAG
 
-FROM --platform=$BUILDPLATFORM ${REPOSITORY}/nginx:${TAG}
+FROM --platform=$BUILDPLATFORM ${REPOSITORY:-islandora}/nginx:${TAG:-2.0.0}
 
 # Install packages and tools that allow for basic downloads.
 RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
