@@ -1,7 +1,29 @@
-##
-# Deployment of the Islandora Bagger container
+# Deployment of the Islandora Bagger container alongside an isle-site-template
 #
-##
+# Steps:
+#   * add the following to the `.env` file
+#     # Chain docker-compose.yml files
+#     COMPOSE_PATH_SEPARATOR=:
+#     COMPOSE_FILE=docker-compose.yml:docker-compose.bagger.yml
+#     # Environment for the Islandora Bagger container
+#     BAGGER_REPOSITORY=cwrc
+#     BAGGER_TAG=latest
+#     BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA=true
+#
+#   * copy this file into the repo
+#   * temporarily for a dev site, copy local `build/certs/rootCA.pem` into the container /etc/ssl/certs/ca-certificates.crt otherwise REST request receive a cert error (e.g., curl)
+
+x-dev: &dev
+  secrets:
+    - source: CERT_PUBLIC_KEY
+    - source: CERT_PRIVATE_KEY
+    - source: CERT_AUTHORITY
+    - source: UID
+    - source: GID
+    - source: BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD
+
+x-devs: &devs
+    - source: CERT_PUBLIC_KEY
 
 secrets:
   UID:
@@ -10,34 +32,26 @@ secrets:
     file: ./custom/secrets/UID
   BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD:
     file: ./custom/secrets/DRUPAL_DEFAULT_ACCOUNT_PASSWORD
+  # Certificates are only used for development environments.
+  # In production the expectation is to use lets encrypt, etc.
+  # See README.md for how to generate them.
+  CERT_PUBLIC_KEY:
+    file: ./build/certs/cert.pem
+  CERT_PRIVATE_KEY:
+    file: ./build/certs/privkey.pem
+  CERT_AUTHORITY:
+    file: ./build/certs/rootCA.pem
 
 volumes:
   bagger-data: {}
 
-# Common to all services
-x-common: &common
-  restart: "no"
-
-# Common build settings
-x-build-common: &build-common
-  args:
-    REPOSITORY: ${ISLE_REPOSITORY:-islandora}
-    TAG: ${ISLE_TAG:-main}
-  x-bake:
-    platforms:
-      - linux/amd64
-      - linux/arm64
-
 services:
 
   bagger:
-    <<: *common
-    build:
-      <<: *build-common
-      #context: ./bagger/
-      context: .
+    <<: *dev
+    restart: "no"
     environment:
-      BAGGER_DRUPAL_URL: ${SITE:-"https://islandora.dev"}
+      BAGGER_DRUPAL_URL: ${SITE:-"https://islandora.dev"} 
       BAGGER_CROND_ENABLE_SERVICE: ${BAGGER_CROND_ENABLE_SERVICE:-"true"}
       BAGGER_CROND_SCHEDULE: ${BAGGER_CROND_SCHEDULE:-1 2 * * *}
       BAGGER_CROND_LOG_LEVEL: ${BAGGER_CROND_LOG_LEVEL:-"8"}
@@ -51,12 +65,10 @@ services:
       BAGGER_DEFAULT_PER_BAG_LOG_BAG_CREATION: ${BAGGER_DEFAULT_PER_BAG_LOG_BAG_CREATION:-"true"}
       BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION: ${BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION:-"false"}
       BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA: ${BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA:-"false"}
-    image: ${REPOSITORY}/bagger:${TAG}
+    image: ${BAGGER_REPOSITORY}/isle-bagger:${BAGGER_TAG}
+    networks:
+      default: {}
     ports: 
       - 9856:8000
-    secrets:
-      - source: UID
-      - source: GID
-      - source: BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD
     volumes:
       - bagger-data:/var/www/bagger/var

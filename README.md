@@ -79,24 +79,29 @@ ToDo: Test further
 
 ## Setup Drupal:
 
-See [Islandora Bagger] for the Drupal setup requirements. `getjwtonlogin` and `islandora_bagger_integration` are required. A quick way to add:
+See [Islandora Bagger] for the Drupal setup requirements. `getjwtonlogin` and `islandora_bagger_integration` are required. A quick way to add (note: should use composer, this is a temporary kluge):
 
 ```
 composer require 'drupal/getjwtonlogin:^2.0'
 cd web/modules/contrib/
 git clone https://github.com/mjordan/islandora_bagger_integration.git
+cd /var/www/drupal
 drush en -y getjwtonlogin
 drush en -y islandora_bagger_integration
 composer install
 drush cache-rebuild
 ```
 
+See the following read me files for additional setup within Drupal, especially if the register bag option is enabled
+* [Islandora Bagger Integration Bag Log](https://github.com/mjordan/islandora_bagger_integration#the-bag-log)
+* [Islandora Bagger](https://github.com/mjordan/islandora_bagger)
+
 ## run a local instance via Docker Compose
 
 * Create a local config for Docker Compose: `.env.sample` to `.env`
 * Update the .env with the Drupal/Islandora site domain and Drupal user
 * Add secret: Drupal account password (see docker-compose.yml) for location
-* Add other environment variables described above to the `.env`
+* Add other environment variables described in the `docker-compose.yml` to the `.env` file
 * `docker compose build`
 * `docker compose up -d` - assumes a proxy or edge router (see warnings about setup in [Islandora Bagger])
 
@@ -107,9 +112,10 @@ This step may be automated but in the case you want a custom config:
 docker compose cp custom/secrets/sample.config.yaml bagger:/var/www/sample.config.yaml`
 ```
 
-Test setup of Drupal (login):
+Test setup of Drupal (login) - test if ssl cert is happy - 2023-08-22 - doesn't seem to be valid any longer:
 ```
-curl  -H "Accept: application/json" 'https://islanora.dev/user/login?_format=xml'
+curl  -H "Accept: application/json" 'https://islandora.dev/user/login?_format=xml'
+```
 
 Create Bag:
 ```
