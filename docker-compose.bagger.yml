@@ -68,7 +68,5 @@ services:
     image: ${BAGGER_REPOSITORY}/isle-bagger:${BAGGER_TAG}
     networks:
       default: {}
-    ports: 
-      - 9856:8000
     volumes:
       - bagger-data:/var/www/bagger/var

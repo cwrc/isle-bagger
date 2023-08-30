@@ -129,6 +129,26 @@ curl -v -X POST -H "Islandora-Node-ID: 48" --data-binary "@${BAGGER_APP_DIR}/var
 cd ${BAGGER_APP_DIR} && ./bin/console app:islandora_bagger:process_queue --queue=${BAGGER_QUEUE_PATH}
 ```
 
+## Include with [Isle-site-template](https://github.com/Islandora-Devops/isle-site-template) like sites
+
+* update Drupal composer json/lock
+  * See [Islandora Bagger] for the Drupal setup requirements. `getjwtonlogin` and `islandora_bagger_integration` are required.
+     * 
+* copy the docker-compose.bagger.yml into the Isle site
+* add to the `.env` to chain multiple docker-compose.yml file together (reduce the need to change the default) 
+```
+# Chain docker-compose.yml files 
+COMPOSE_PATH_SEPARATOR=:
+COMPOSE_FILE=docker-compose.yml:docker-compose.bagger.yml
+
+# Environment for the Islandora Bagger container
+BAGGER_REPOSITORY=cwrc
+BAGGER_TAG=latest
+BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA=true
+```
+
+
+
 ## References
 
 [Islandora Bagger]: https://github.com/mjordan/islandora_bagger
