@@ -36,7 +36,7 @@ EXPOSE 8000
 #
 ENV \
     BAGGER_APP_ENV=dev \
-    BAGGER_APP_SECRET=f58c87e1d737c4422b45ba4310abede5 \
+    BAGGER_APP_SECRET=sec.f58c87e1d737c4422b45ba4310abede5 \
     BAGGER_BAG_DOWNLOAD_PREFIX=https://islandora.traefik.me/bags/ \
     BAGGER_CROND_ENABLE_SERVICE="false" \
     BAGGER_CROND_LOG_LEVEL="0" \
