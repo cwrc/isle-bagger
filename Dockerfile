@@ -1,14 +1,14 @@
-# syntax=docker/dockerfile:1.5.1
+# syntax=docker/dockerfile:1.7
 ARG REPOSITORY
 ARG TAG
 
-FROM --platform=$BUILDPLATFORM ${REPOSITORY:-islandora}/nginx:${TAG:-2.0.0}
+FROM --platform=$BUILDPLATFORM ${REPOSITORY:-islandora}/nginx:${TAG:-3.2.3}
 
 # Install packages and tools that allow for basic downloads.
 RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add --no-cache \
-        php81-intl \
-        php81-zip \
+        php83-intl \
+        php83-zip \
     && \
     echo '' > /root/.ash_history
 
@@ -27,16 +27,16 @@ RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/r
         --dest "/var/www/bagger" \
     && \
     composer install -d /var/www/bagger
-    # `--no-dev` leads to install error - ToDo revise composer.json 
+    # `--no-dev` leads to install error - ToDo revise composer.json
     # APP_ENV=prod composer install -d /var/www/bagger --no-dev
     # composer install -d /var/www/bagger --no-dev
 
 EXPOSE 8000
 
-# 
+#
 ENV \
     BAGGER_APP_ENV=dev \
-    BAGGER_APP_SECRET=f58c87e1d737c4422b45ba4310abede5 \
+    BAGGER_APP_SECRET=sec.f58c87e1d737c4422b45ba4310abede5 \
     BAGGER_BAG_DOWNLOAD_PREFIX=https://islandora.traefik.me/bags/ \
     BAGGER_CROND_ENABLE_SERVICE="false" \
     BAGGER_CROND_LOG_LEVEL="0" \
@@ -65,6 +65,8 @@ ENV \
 WORKDIR /var/www/
 
 # requries v24+ of Docker
-COPY --chown=nginx:nginx --link rootfs /
+# https://github.com/docker/build-push-action/issues/761
+#COPY --chown=nginx:nginx --link rootfs /
+COPY --chown=nginx:nginx rootfs /
 
-RUN find /var/www/bagger ! -user nginx -exec chown nginx:nginx {} \;
+#RUN find /var/www/bagger ! -user nginx -exec chown nginx:nginx {} \;
