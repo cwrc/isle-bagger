@@ -18,7 +18,7 @@ on:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
   schedule:
-    - cron: '39 23 * * 4'
+    - cron: '39 23 * * 1'
 
 permissions:
   contents: read
@@ -36,12 +36,12 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag localbuild/testimage:latest
     - name: Run the Anchore Grype scan action
-      uses: anchore/scan-action@d5aa5b6cb9414b0c7771438046ff5bcfa2854ed7
+      uses: anchore/scan-action@58e20e426c94aa8cdbbe66da1e3b15c01d496d09 #v3.6.4
       id: scan
       with:
         image: "localbuild/testimage:latest"
-        fail-build: true
-        severity-cutoff: critical
+        # fail-build: true
+        # severity-cutoff: critical
     - name: Upload vulnerability report
       uses: github/codeql-action/upload-sarif@v2
       with:
