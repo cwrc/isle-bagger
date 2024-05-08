@@ -115,7 +115,10 @@ docker compose cp custom/secrets/sample.config.yaml bagger:/var/www/sample.confi
 Test setup of Drupal (login):
 
 ``` bash
-curl  -H "Accept: application/json" 'https://islanora.dev/user/login?_format=xml'
+# Execute locally to a remote site
+curl  -H "Accept: application/json" 'https://islandora.dev/user/login?_format=xml'
+# Execute locally to a local/dev site with mkcert SSL
+curl --cacert build/certs/rootCA.pem  -Headers "Accept: application/json" https://islandora.dev/user/login?_format=xml
 ```
 
 Create Bag:
@@ -127,18 +130,27 @@ Create Bag:
 Queue item:
 
 ``` bash
+# Within isle-bagger container
 curl -v -X POST -H "Islandora-Node-ID: 48" --data-binary "@${BAGGER_APP_DIR}/var/sample_per_bag_config.yaml" http://127.0.0.1:8000/api/createbag
 
 cd ${BAGGER_APP_DIR} && ./bin/console app:islandora_bagger:process_queue --queue=${BAGGER_QUEUE_PATH}
 ```
 
-## Recipe to include the Isle-Bagger container with an [Isle-site-template](https://github.com/Islandora-Devops/isle-site-template) like site
+## Recipe to include the Isle-Bagger container with an existing Isle site
 
-* update Drupal composer json/lock
+The following is a recipe to include the isle-bagger with an existing Isle site of the form:
+
+* [Isle-site-template](https://github.com/Islandora-Devops/isle-site-template)
+* [Isle-DC](https://github.com/Islandora-Devops/isle-dc)
+
+The Steps:
+
+* Update Drupal composer.json / composer.lock
   * See [Islandora Bagger] for the Drupal setup requirements
-    * `getjwtonlogin` and `islandora_bagger_integration` are required.
-* copy the sample docker-compose.bagger.yml into the Isle site
-* include the `COMPOSE_FILE` property in `.env` to chain multiple docker-compose.yml files together (i.e., reduce the need to change the default docker-compose.yml)
+    * The Drupal modules `getjwtonlogin` and `islandora_bagger_integration` are required.
+* Copy the sample docker-compose.bagger.yml into the Isle site directory
+* Include the `COMPOSE_FILE` property in the `.env` file
+  * to chain multiple docker-compose.yml files together (i.e., reduce the need to change the default docker-compose.yml)
 
 ``` config
 # Chain docker-compose.yml files
@@ -146,7 +158,7 @@ COMPOSE_PATH_SEPARATOR=:
 COMPOSE_FILE=docker-compose.yml:docker-compose.bagger.yml
 
 # Environment for the Islandora Bagger container
-BAGGER_REPOSITORY=cwrc
+BAGGER_REPOSITORY=ghcr.io/cwrc
 BAGGER_TAG=latest
 BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA=true
 ```
