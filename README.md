@@ -119,12 +119,15 @@ Test setup of Drupal (login):
 curl  -H "Accept: application/json" 'https://islandora.dev/user/login?_format=xml'
 # Execute locally to a local/dev site with mkcert SSL
 curl --cacert build/certs/rootCA.pem  -Headers "Accept: application/json" https://islandora.dev/user/login?_format=xml
+# or add build/certs/rootCA.pem to the containers /etc/ssl/certs/ca-certificates.crt
+# then
+curl  -H "Accept: application/json" 'https://islandora.dev/user/login?_format=xml'
 ```
 
 Create Bag:
 
 ``` bash
-./bin/console app:islandora_bagger:create_bag -vvv --settings=var/sample_per_bag_config.yaml --node=47
+cd ${BAGGER_APP_DIR} && ./bin/console app:islandora_bagger:create_bag -vvv --settings=var/sample_per_bag_config.yaml --node=47
 ```
 
 Queue item:
@@ -162,6 +165,10 @@ BAGGER_REPOSITORY=ghcr.io/cwrc
 BAGGER_TAG=latest
 BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA=true
 ```
+
+* if using a local install with a self-signed certificate (e.g., via mkcert and https://github.com/Islandora-Devops/isle-site-template):
+  * add `build/certs/rootCA.pem` to the containers `/etc/ssl/certs/ca-certificates.crt` file otherwise an SSL exception will occur
+    * note: this is not automatic at the moment
 
 ## References
 
