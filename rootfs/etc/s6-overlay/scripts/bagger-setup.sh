@@ -11,8 +11,15 @@ EOF
     fi
 }
 
+function setup_dir {
+    mkdir -p ${BAGGER_OUTPUT_DIR}
+    chown nginx:nginx ${BAGGER_OUTPUT_DIR}
+    chmod 02755 ${BAGGER_OUTPUT_DIR}
+}
+
 function main {
     setup_cron
+    setup_dir
 }
 
 main

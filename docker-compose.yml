@@ -13,6 +13,7 @@ secrets:
 
 volumes:
   bagger-data: {}
+  bagger-aip: {}
 
 # Common to all services
 x-common: &common
@@ -41,6 +42,7 @@ services:
       BAGGER_CROND_ENABLE_SERVICE: ${BAGGER_CROND_ENABLE_SERVICE:-"true"}
       BAGGER_CROND_SCHEDULE: ${BAGGER_CROND_SCHEDULE:-1 2 * * *}
       BAGGER_CROND_LOG_LEVEL: ${BAGGER_CROND_LOG_LEVEL:-"8"}
+      BAGGER_OUTPUT_DIR: ${BAGGER_OUTPUT_DIR:-"/data/aip/"}
       BAGGER_BAG_DOWNLOAD_PREFIX: ${BAGGER_BAG_DOWNLOAD_PREFIX:-""}  # unused
       BAGGER_DEFAULT_PER_BAG_NAME_TEMPLATE: ${BAGGER_DEFAULT_PER_BAG_NAME_TEMPLATE:-"aip_%"}
       BAGGER_DEFAULT_PER_BAG_CONTACT_NAME: ${BAGGER_DEFAULT_PER_BAG_CONTACT_NAME:-Contact Name}
@@ -51,12 +53,13 @@ services:
       BAGGER_DEFAULT_PER_BAG_LOG_BAG_CREATION: ${BAGGER_DEFAULT_PER_BAG_LOG_BAG_CREATION:-"true"}
       BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION: ${BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION:-"false"}
       BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA: ${BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA:-"false"}
-    image: ${REPOSITORY}/bagger:${TAG}
+    image: ${REPOSITORY}/cwrc/isle-bagger:${TAG}
     ports: 
       - 9856:8000
-    secrets:
-      - source: UID
-      - source: GID
-      - source: BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD
+    # secrets:
+    #   - source: UID
+    #   - source: GID
+    #   - source: BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD
     volumes:
       - bagger-data:/var/www/bagger/var
+      - bagger-aip:${BAGGER_OUTPUT_DIR:-/data/aip}

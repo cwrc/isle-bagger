@@ -26,7 +26,9 @@ RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/r
         --strip \
         --dest "/var/www/bagger" \
     && \
-    composer install -d /var/www/bagger
+    chown -R nginx:nginx /var/www/bagger \
+    && \
+    su -s /bin/bash nginx -c "composer install -d /var/www/bagger" \
     # `--no-dev` leads to install error - ToDo revise composer.json
     # APP_ENV=prod composer install -d /var/www/bagger --no-dev
     # composer install -d /var/www/bagger --no-dev
