@@ -2,7 +2,7 @@
 ARG REPOSITORY
 ARG TAG
 
-FROM --platform=$BUILDPLATFORM ${REPOSITORY:-islandora}/nginx:${TAG:-3.2.3}
+FROM --platform=$BUILDPLATFORM ${REPOSITORY:-islandora}/nginx:${TAG:-3.2.5}
 
 # Install packages and tools that allow for basic downloads.
 RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
@@ -15,7 +15,7 @@ RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/ca
 # PHP 8.1
 ARG BAGGER_COMMIT="14661df7867af47bb86187f0f94a067e5aa91fd2"
 ARG BAGGER_FILE=${BAGGER_COMMIT}.tar.gz
-ARG BAGGER_URL="https://github.com/jefferya/islandora_bagger/archive/${BAGGER_FILE}"
+ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/${BAGGER_FILE}"
 ARG BAGGER_SHA256=ae4daf66c8a0d78b377ea02076ef08543c1f6777f6161bfccc892e40cdfd6592
 
 RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
