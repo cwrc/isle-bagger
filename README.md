@@ -1,6 +1,8 @@
 # Bagger
 
-Docker image for [Islandora Bagger](https://github.com/mjordan/islandora_bagger).
+Container image for [Islandora Bagger](https://github.com/mjordan/islandora_bagger).
+
+The application repository contains the documentation [Islandora Bagger](https://github.com/mjordan/islandora_bagger), this is likely a good place to start for learning how to use the application and how to use.
 
 Produces archival information packages, [Bags](https://en.wikipedia.org/wiki/BagIt), for objects using Islandora's REST interface. For more information see [Islandora Bagger]
 
@@ -59,31 +61,23 @@ This container makes several opinionated assumptions about how one installs and 
 * Turn on the ability to register preservation bag creation with Drupal/Islandora (https://github.com/mjordan/islandora_bagger_integration/pull/31) via `BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA`
 * Make no assumptions about setup infrastructure: assume a proxy or edge router (see warnings about setup in [Islandora Bagger])
 
-## Test
-
-ToDo: revise
-
-* permissions wrong (if `APP_ENV` is set to prod)
-* automate the build of a list of resources to preserve and pass to islandora_bagger (rough idea: gather Drupal resources by their modified date and compare against the modified dates (or hash?) in the islandora_bagger_integration bag log and if differ then add to a list to preserve  )
-* post-bag plugin to upload archival packages to OLRC
-* automate OCI image generation and upload to an image repository
-
-ToDo: Test further
-
-* Test: Drupal Context that sends requests to the Bagger REST API to queue a preservation request
-* test if per bag config can override location in the per config/services.yml. Also set in the crontab to override any overrides in the per bag
-* convert yaml_path to an env (where the per bag configuration is stored on web requests for preservation - https://github.com/mjordan/islandora_bagger/blob/1b4973023d0ace40633c79340077980b3be7c947/src/Controller/IslandoraBaggerController.php#L26)
-* `delete_settings_file`: problems arise if the resource is added to the queue multiple times before being preserved.  The resource is added to the preservation queue multiple times but the settings file is only stored on the filesystem once thus the first preservation will delete the settings file and subsequent queued items may cause a missing settings file error.
-
 ## Setup Drupal
 
-See [Islandora Bagger] for the Drupal setup requirements. `getjwtonlogin` and `islandora_bagger_integration` are required. A quick way to add (note: should use composer, this is a temporary kluge):
+See [Islandora Bagger] for the Drupal setup requirements. `getjwtonlogin` and `islandora_bagger_integration` are required. A quick way to add:
+
+Add to composer.json "repositories" key in your Drupal project
+
+``` yaml
+ {
+      "type": "git",
+      "url": "https://github.com/cwrc/islandora_bagger_integration.git",
+      "no-api": true
+    },
+```
 
 ``` bash
-composer require 'drupal/getjwtonlogin:^2.0'
-cd web/modules/contrib/
-git clone https://github.com/mjordan/islandora_bagger_integration.git
-cd /var/www/drupal
+cd ${DRUPAL_HOME}
+composer require -d /var/www/drupal 'drupal/getjwtonlogin:^2.0' 'mjordan/islandora_bagger_integration'
 drush en -y getjwtonlogin
 drush en -y islandora_bagger_integration
 composer install
@@ -169,6 +163,23 @@ BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA=true
 * if using a local install with a self-signed certificate (e.g., via mkcert and https://github.com/Islandora-Devops/isle-site-template):
   * add `build/certs/rootCA.pem` to the containers `/etc/ssl/certs/ca-certificates.crt` file otherwise an SSL exception will occur
     * note: this is not automatic at the moment
+
+## Test and future work
+
+ToDo: revise
+
+* permissions wrong (if `APP_ENV` is set to prod)
+* automate the build of a list of resources to preserve and pass to islandora_bagger (rough idea: gather Drupal resources by their modified date and compare against the modified dates (or hash?) in the islandora_bagger_integration bag log and if differ then add to a list to preserve  )
+* post-bag plugin to upload archival packages to OLRC
+* automate OCI image generation and upload to an image repository
+
+ToDo: Test further
+
+* Test: Drupal Context that sends requests to the Bagger REST API to queue a preservation request
+* test if per bag config can override location in the per config/services.yml. Also set in the crontab to override any overrides in the per bag
+* convert yaml_path to an env (where the per bag configuration is stored on web requests for preservation - https://github.com/mjordan/islandora_bagger/blob/1b4973023d0ace40633c79340077980b3be7c947/src/Controller/IslandoraBaggerController.php#L26)
+* `delete_settings_file`: problems arise if the resource is added to the queue multiple times before being preserved.  The resource is added to the preservation queue multiple times but the settings file is only stored on the filesystem once thus the first preservation will delete the settings file and subsequent queued items may cause a missing settings file error.
+
 
 ## References
 
