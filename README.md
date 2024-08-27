@@ -164,6 +164,8 @@ BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA=true
   * add `build/certs/rootCA.pem` to the containers `/etc/ssl/certs/ca-certificates.crt` file otherwise an SSL exception will occur
     * note: this is not automatic at the moment
 
+* Add additional Bagger properties to the `.env`, as needed.
+
 ## Test and future work
 
 ToDo: revise
