@@ -6,8 +6,8 @@
 #     COMPOSE_PATH_SEPARATOR=:
 #     COMPOSE_FILE=docker-compose.yml:docker-compose.bagger.yml
 #     # Environment for the Islandora Bagger container
-#     BAGGER_REPOSITORY=cwrc
-#     BAGGER_TAG=latest
+#     BAGGER_REPOSITORY=ghcr.io/cwrc
+#     BAGGER_TAG=local
 #     BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA=true
 #
 #   * copy this file into the repo
@@ -51,7 +51,7 @@ services:
     <<: *dev
     restart: "no"
     environment:
-      BAGGER_DRUPAL_URL: ${SITE:-"https://islandora.dev"} 
+      BAGGER_DRUPAL_URL: ${SITE:-"https://islandora.dev"}
       BAGGER_CROND_ENABLE_SERVICE: ${BAGGER_CROND_ENABLE_SERVICE:-"true"}
       BAGGER_CROND_SCHEDULE: ${BAGGER_CROND_SCHEDULE:-1 2 * * *}
       BAGGER_CROND_LOG_LEVEL: ${BAGGER_CROND_LOG_LEVEL:-"8"}
