@@ -12,7 +12,7 @@ RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/ca
     && \
     echo '' > /root/.ash_history
 
-# PHP 8.1
+#
 ARG BAGGER_COMMIT="14661df7867af47bb86187f0f94a067e5aa91fd2"
 ARG BAGGER_FILE=${BAGGER_COMMIT}.tar.gz
 ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/${BAGGER_FILE}"
