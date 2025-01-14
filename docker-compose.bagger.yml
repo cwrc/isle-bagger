@@ -25,6 +25,16 @@ x-dev: &dev
 x-devs: &devs
     - source: CERT_PUBLIC_KEY
 
+# Common build settings
+x-build-common: &build-common
+  args:
+    BAGGER_REPOSITORY: ${BAGGER_REPOSITORY:-ghcr.io/cwrc}
+    BAGGER_TAG: ${BAGGER_TAG:-latest}
+  x-bake:
+    platforms:
+      - linux/amd64
+      - linux/arm64
+
 secrets:
   UID:
     file: ./custom/secrets/UID
@@ -49,6 +59,9 @@ services:
 
   bagger:
     <<: *dev
+    build:
+      <<: *build-common
+      context: .
     restart: "no"
     environment:
       BAGGER_DRUPAL_URL: ${SITE:-"https://islandora.dev"}

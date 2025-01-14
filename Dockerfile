@@ -2,7 +2,8 @@
 ARG REPOSITORY
 ARG TAG
 
-FROM --platform=$BUILDPLATFORM ${REPOSITORY:-islandora}/nginx:${TAG:-3.4.14}
+#FROM --platform=$BUILDPLATFORM isle_buildkit as base 
+FROM isle_buildkit
 
 # Install packages and tools that allow for basic downloads.
 RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
@@ -13,10 +14,10 @@ RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/ca
     echo '' > /root/.ash_history
 
 #
-ARG BAGGER_COMMIT="14661df7867af47bb86187f0f94a067e5aa91fd2"
+ARG BAGGER_COMMIT="e540c7a66e3497f58d94db439368ad07057ac861"
 ARG BAGGER_FILE=${BAGGER_COMMIT}.tar.gz
 ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/${BAGGER_FILE}"
-ARG BAGGER_SHA256=ae4daf66c8a0d78b377ea02076ef08543c1f6777f6161bfccc892e40cdfd6592
+ARG BAGGER_SHA256=3ffecb44d5436fceded5f5a6b49f71fca1d9262c40d4698a16ab87602c93bf0f
 
 RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=bagger-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
@@ -28,7 +29,7 @@ RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/r
     && \
     chown -R nginx:nginx /var/www/bagger \
     && \
-    su -s /bin/bash nginx -c "composer install -d /var/www/bagger" \
+    su -s /bin/bash nginx -c "composer install -d /var/www/bagger"
     # `--no-dev` leads to install error - ToDo revise composer.json
     # APP_ENV=prod composer install -d /var/www/bagger --no-dev
     # composer install -d /var/www/bagger --no-dev
