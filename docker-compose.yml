@@ -18,12 +18,12 @@ x-common: &common
 # Common build settings
 x-build-common: &build-common
   args:
-    REPOSITORY: ${ISLE_REPOSITORY:-islandora}
-    TAG: ${ISLE_TAG:-main}
+    REPOSITORY: ${ISLE_REPOSITORY:-docker.io/islandora}
+    TAG: ${ISLE_TAG:-latest}
   x-bake:
     platforms:
       - linux/amd64
-      - linux/arm64
+        #- linux/arm64
 
 services:
 
