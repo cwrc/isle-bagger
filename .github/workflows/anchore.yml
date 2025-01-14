@@ -35,7 +35,7 @@ jobs:
     - name: Check out the code
       uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker buildx bake . --file Dockerfile --tag localbuild/testimage:latest
+      run: docker buildx bake --set "isle-bagger.tags=localbuild/testimage:latest"
     - name: Run the Anchore Grype scan action
       uses: anchore/scan-action@3343887d815d7b07465f6fdcd395bd66508d486a #v3.6.4
       id: scan
