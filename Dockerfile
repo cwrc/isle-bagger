@@ -1,7 +1,4 @@
 # syntax=docker/dockerfile:1.7
-ARG REPOSITORY
-ARG TAG
-
 #FROM --platform=$BUILDPLATFORM isle_buildkit as base 
 FROM isle_buildkit
 
@@ -14,10 +11,10 @@ RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/ca
     echo '' > /root/.ash_history
 
 #
-ARG BAGGER_COMMIT="e5d3f064dceaba273d257a7c7a5ca6f73aed5ebc"
+ARG BAGGER_COMMIT="afbe5fd067310d531129da4107c460cf2d0a36b2"
 ARG BAGGER_FILE=${BAGGER_COMMIT}.tar.gz
 ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/${BAGGER_FILE}"
-ARG BAGGER_SHA256=39a190676eef0df513497374d8b3270ba0afdd77bfee1666d525b0e53cd95b30
+ARG BAGGER_SHA256=959f649b4007960cc3d0b3393bb6318bcc4da2cae253518f91033a3656dfd4d9
 
 RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=bagger-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
