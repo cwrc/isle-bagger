@@ -50,6 +50,7 @@ ENV \
     BAGGER_QUEUE_PATH="/var/www/bagger/var/islandora_bagger.queue" \
     BAGGER_OUTPUT_DIR="%kernel.project_dir%/var/output" \
     BAGGER_TEMP_DIR="%kernel.project_dir%/var/tmp" \
+    BAGGER_PLUGIN_LIST='["AddBasicTags", "AddMedia", "AddNodeJson", "AddNodeJsonld", "AddMediaJson", "AddMediaJsonld", "AddFileFromTemplate", "AddNodeCsv", "AddNodeJsonTranslation", "AddNodeJsonViaJsonApi", "AddGroupJson"]' \
     BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA="false" \
     BAGGER_DEFAULT_PER_BAG_NAME="nid" \
     BAGGER_DEFAULT_PER_BAG_NAME_TEMPLATE="aip_%" \

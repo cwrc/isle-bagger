@@ -83,7 +83,8 @@ log_bag_location: {{ getenv "BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION" }}
 
 # Required. Register plugins to populate bag-info.txt and the data directory.
 # Plugins are executed in the order they are listed here.
-plugins: ['AddBasicTags', 'AddMedia', 'AddNodeJson', 'AddNodeJsonld', 'AddMediaJson', 'AddMediaJsonld', 'AddFileFromTemplate', 'AddNodeCsv']
+# plugins: ['AddBasicTags', 'AddMedia', 'AddNodeJson', 'AddNodeJsonld', 'AddMediaJson', 'AddMediaJsonld', 'AddFileFromTemplate', 'AddNodeCsv']
+plugins: {{ getenv "BAGGER_PLUGIN_LIST" }}
 
 # Used by the 'AddMedia' plugin. These are the Drupal taxomony term IDs
 # from the "Islandora Media Use" vocabulary. Use an emply list (e.g., [])
