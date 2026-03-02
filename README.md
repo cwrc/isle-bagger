@@ -20,7 +20,7 @@ additional settings, volumes, ports, etc.
 | BAGGER_QUEUE_PATH                                   |           | '%kernel.project_dir%/var/islandora_bagger.queue'     | Location of the queue                                                                                            |
 | BAGGER_LOCATION_LOG_PATH                            |           | '%kernel.project_dir%/var/islandora_bagger.locations' | Location of the bag log path                                                                                     |
 | BAGGER_APP_SECRET                                   |           | 123                                                   | PHP Symphony app secret                                                                                          |
-| BAGGER_CROND_LOG_LEVEL |           | 0                                                 | crond log level                                                        |
+| BAGGER_CROND_LOG_LEVEL                              |           | 0                                                     | crond log level                                                                                                  |
 | BAGGER_CROND_ENABLE_SERVICE                         |           | false                                                 | Enable scheduled job managed by cron to process the queue                                                        |
 | BAGGER_CROND_SCHEDULE                               |           | 1 2 * * *                                             | Define the schedule of the queue processor                                                                       |
 | BAGGER_BAG_DOWNLOAD_PREFIX                          |           | https://islandora.traefik.me/bags/                    | The hostname/path to where users can download serialized bags. From config/services.yaml app.bag.download.prefix |
@@ -29,20 +29,21 @@ additional settings, volumes, ports, etc.
 | BAGGER_DRUPAL_DEFAULT_ACCOUNT_PASSWORD              |           | password                                              | Drupal user password                                                                                             |
 | BAGGER_LOG_LEVEL                                    |           | info                                                  | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none                |
 | BAGGER_CROND_LOG_LEVEL                              |           | info                                                  | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none                |
-| BAGGER_OUTPUT_DIR                                   |           | "%kernel.project_dir%/var/output"                     | Path to store generated archival information packages (bags)|
-| BAGGER_QUEUE_PATH                                   |           | "%kernel.project_dir%/var/islandora_bagger.queue"     | Path to the queue file |
-| BAGGER_TEMP_DIR                                     |           | "%kernel.project_dir%/var/tmp"                        | Path to the temp directory |
-| BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA |           | false                                                 | Register creation of this Bag with Islandora Bagger Integration |
-| BAGGER_DEFAULT_PER_BAG_NAME                         |           | "nid"                                                 | How to name the Bag directory (or file if serialized). One of 'nid' or 'uuid'|
-| BAGGER_DEFAULT_PER_BAG_NAME_TEMPLATE                |           | "aip_%"                                               | Template for the Bag name. The % is replaced by the nid or uuid (depending on the value of "bag_name")|
-| BAGGER_DEFAULT_PER_BAG_SERIALIZE                    |           | "zip"                                                 | Whether or not to zip up the Bag. One of 'false', 'zip', or 'tgz' |
-| BAGGER_DEFAULT_PER_BAG_CONTACT_NAME                 |           | "Contact"                                             | Bag-info: contact name |
-| BAGGER_DEFAULT_PER_BAG_CONTACT_EMAIL                |           | "Contact email"                                       | Bag-info: contact email |
-| BAGGER_DEFAULT_PER_BAG_SOURCE_ORGANIZATION          |           | "Source organization"                                 | Bag-info: source organization |
-| BAGGER_DEFAULT_PER_BAG_HTTP_TIMEOUT                 |           | 120                                                   | Timeout (sec) when downloading the components that comprise a Bag |
-| BAGGER_DEFAULT_PER_BAG_DELETE_SETTINGS_FILE         |           | "false"                                               | Per Bag settings file: delete after use |
-| BAGGER_DEFAULT_PER_BAG_LOG_BAG_CREATION             |           | "true"                                                | Log the serialized Bag's creation |
-| BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION             |           | "false"                                               | Log the serialized Bag's location to allow retrieval of the Bag's download URL (if applicable) |
+| BAGGER_OUTPUT_DIR                                   |           | "%kernel.project_dir%/var/output"                     | Path to store generated archival information packages (bags)                                                     |
+| BAGGER_QUEUE_PATH                                   |           | "%kernel.project_dir%/var/islandora_bagger.queue"     | Path to the queue file                                                                                           |
+| BAGGER_TEMP_DIR                                     |           | "%kernel.project_dir%/var/tmp"                        | Path to the temp directory                                                                                       |
+| BAGGER_PLUGIN_LIST                                  |           | '["AddBasicTags", "AddMedia", "AddNodeJson"]'         | Plugins used to build the archival package                                                                       |
+| BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA |           | false                                                 | Register creation of this Bag with Islandora Bagger Integration                                                  |
+| BAGGER_DEFAULT_PER_BAG_NAME                         |           | "nid"                                                 | How to name the Bag directory (or file if serialized). One of 'nid' or 'uuid'                                    |
+| BAGGER_DEFAULT_PER_BAG_NAME_TEMPLATE                |           | "aip_%"                                               | Template for the Bag name. The % is replaced by the nid or uuid (depending on the value of "bag_name")           |
+| BAGGER_DEFAULT_PER_BAG_SERIALIZE                    |           | "zip"                                                 | Whether or not to zip up the Bag. One of 'false', 'zip', or 'tgz'                                                |
+| BAGGER_DEFAULT_PER_BAG_CONTACT_NAME                 |           | "Contact"                                             | Bag-info: contact name                                                                                           |
+| BAGGER_DEFAULT_PER_BAG_CONTACT_EMAIL                |           | "Contact email"                                       | Bag-info: contact email                                                                                          |
+| BAGGER_DEFAULT_PER_BAG_SOURCE_ORGANIZATION          |           | "Source organization"                                 | Bag-info: source organization                                                                                    |
+| BAGGER_DEFAULT_PER_BAG_HTTP_TIMEOUT                 |           | 120                                                   | Timeout (sec) when downloading the components that comprise a Bag                                                |
+| BAGGER_DEFAULT_PER_BAG_DELETE_SETTINGS_FILE         |           | "false"                                               | Per Bag settings file: delete after use                                                                          |
+| BAGGER_DEFAULT_PER_BAG_LOG_BAG_CREATION             |           | "true"                                                | Log the serialized Bag's creation                                                                                |
+| BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION             |           | "false"                                               | Log the serialized Bag's location to allow retrieval of the Bag's download URL (if applicable)                   |
 
 ----
 
