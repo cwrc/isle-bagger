@@ -59,9 +59,6 @@ services:
 
   bagger:
     <<: *dev
-    build:
-      <<: *build-common
-      context: .
     restart: "no"
     environment:
       BAGGER_DRUPAL_URL: ${SITE:-"https://islandora.dev"}

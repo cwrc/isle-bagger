@@ -2,7 +2,7 @@ variable "ISLE_BUILDKIT_REGISTRY" {
     default = "docker.io/islandora"
     }
 variable "ISLE_BUILDKIT_VERSION" {
-    default = "6.3.7"
+    default = "6.3.18"
     }
 
 ###############################################################################
@@ -44,4 +44,10 @@ target "isle-bagger" {
   contexts = {
     isle_buildkit = "docker-image://${ISLE_BUILDKIT_REGISTRY}/nginx:${ISLE_BUILDKIT_VERSION}"
   } 
+}
+target "isle-bagger-local" {
+  inherits = ["isle-bagger"]
+  platforms = ["linux/amd64"]
+  output=["type=docker"]
+  tags=["ghcr.io/cwrc/isle-bagger:local"]
 }

@@ -96,7 +96,7 @@ See the following README files for additional setup within Drupal, especially if
 * Update the .env with the Drupal/Islandora site domain and Drupal user
 * Add secret: Drupal account password (see docker-compose.yml) for location
 * Add other environment variables described in the `docker-compose.yml` to the `.env` file
-* `docker compose build` - build
+* `docker buildx bake isle-bagger-local` - build
 * `docker compose up -d` - assumes a proxy or edge router (see warnings about setup in [Islandora Bagger])
 
 ## Setup Bagger Container (temp)
