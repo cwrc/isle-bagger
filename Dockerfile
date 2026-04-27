@@ -11,10 +11,10 @@ RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/ca
     echo '' > /root/.ash_history
 
 #
-ARG BAGGER_COMMIT="1ce72d1dc7a1ed6a86843c920143d33dae385292"
+ARG BAGGER_COMMIT="97abe238a21449ddb321815011ba246d86b9731b"
 ARG BAGGER_FILE=${BAGGER_COMMIT}.tar.gz
 ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/${BAGGER_FILE}"
-ARG BAGGER_SHA256=311249c6b08776d45d83460af79f969a9dd2ec155560a907f7cf36d8aa50e960
+ARG BAGGER_SHA256=c192fe595deab197a7d1b4f0660a2ec9afb3458da7fa520cd3498a081070da91
 
 RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=bagger-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
@@ -50,7 +50,7 @@ ENV \
     BAGGER_QUEUE_PATH="/var/www/bagger/var/islandora_bagger.queue" \
     BAGGER_OUTPUT_DIR="%kernel.project_dir%/var/output" \
     BAGGER_TEMP_DIR="%kernel.project_dir%/var/tmp" \
-    BAGGER_PLUGIN_LIST='["AddBasicTags", "AddMedia", "AddNodeJson", "AddNodeJsonld", "AddMediaJson", "AddMediaJsonld", "AddFileFromTemplate", "AddNodeCsv", "AddNodeJsonTranslation", "AddNodeJsonViaJsonApi", "AddGroupJson"]' \
+    BAGGER_PLUGIN_LIST='["AddBasicTags", "AddMediaFile", "AddNodeJson", "AddNodeJsonld", "AddMediaJson", "AddMediaJsonld", "AddFileFromTemplate", "AddNodeCsv", "AddNodeJsonTranslation", "AddNodeJsonViaJsonApi", "AddGroupJson"]' \
     BAGGER_DEFAULT_PER_BAG_REGISTER_BAGS_WITH_ISLANDORA="false" \
     BAGGER_DEFAULT_PER_BAG_NAME="nid" \
     BAGGER_DEFAULT_PER_BAG_NAME_TEMPLATE="aip_%" \

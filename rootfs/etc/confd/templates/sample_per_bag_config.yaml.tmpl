@@ -83,7 +83,7 @@ log_bag_location: {{ getenv "BAGGER_DEFAULT_PER_BAG_LOG_BAG_LOCATION" }}
 
 # Required. Register plugins to populate bag-info.txt and the data directory.
 # Plugins are executed in the order they are listed here.
-# plugins: ['AddBasicTags', 'AddMedia', 'AddNodeJson', 'AddNodeJsonld', 'AddMediaJson', 'AddMediaJsonld', 'AddFileFromTemplate', 'AddNodeCsv']
+# plugins: ['AddBasicTags', 'AddMediaFile', 'AddNodeJson', 'AddNodeJsonld', 'AddMediaJson', 'AddMediaJsonld', 'AddFileFromTemplate', 'AddNodeCsv']
 plugins: {{ getenv "BAGGER_PLUGIN_LIST" }}
 
 # Used by the 'AddMedia' plugin. These are the Drupal taxomony term IDs
@@ -116,4 +116,7 @@ templated_output_filename: 'metadata/MODS.xml'
 # as part of the filename.
 csv_output_filename: 'metadata.csv'
 
-
+# Used by the 'AddMediaFile' plugin.
+# check_media_file_hashes will enable checking the file hash (from Drupal filehash module)
+# of the downloaded Media versus the has value in the metadata
+check_media_file_hashes: true
