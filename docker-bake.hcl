@@ -2,7 +2,7 @@ variable "ISLE_BUILDKIT_REGISTRY" {
     default = "docker.io/islandora"
     }
 variable "ISLE_BUILDKIT_VERSION" {
-    default = "6.4.2"
+    default = "6.4.3"
     }
 
 ###############################################################################

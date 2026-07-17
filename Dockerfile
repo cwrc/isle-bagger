@@ -11,10 +11,13 @@ RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/ca
     echo '' > /root/.ash_history
 
 #
-ARG BAGGER_COMMIT="8e276bef34674ccdf14cb658c9d19bb58b3a16b8"
-ARG BAGGER_FILE=${BAGGER_COMMIT}.tar.gz
-ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/${BAGGER_FILE}"
-ARG BAGGER_SHA256=b7079cf743012fb95d53d9a502430baca7b02b772ed4578e4fbbb14a98dcf7e5
+# ARG BAGGER_COMMIT="2b92b103c3f81690c934d5d0054f5403f7fc9d50"
+# ARG BAGGER_FILE=${BAGGER_}.tar.gz
+# ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/${BAGGER_FILE}"
+ARG BAGGER_RELEASE="2.0.8"
+ARG BAGGER_FILE=${BAGGER_RELEASE}.tar.gz
+ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/refs/tags/${BAGGER_FILE}"
+ARG BAGGER_SHA256=d5ec6fd89c9237efdd005bd675e102ac256161ce79a612ac33b7daffd5e9294f
 
 RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=bagger-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
