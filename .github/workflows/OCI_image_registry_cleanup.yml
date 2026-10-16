@@ -1,4 +1,4 @@
-name: Cleanup actions
+name: OCI image registry cleanup actions
 
 on:
   schedule:
