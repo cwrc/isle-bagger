@@ -14,10 +14,10 @@ RUN --mount=type=cache,id=bagger-apk-${TARGETARCH},sharing=locked,target=/var/ca
 # ARG BAGGER_COMMIT="2b92b103c3f81690c934d5d0054f5403f7fc9d50"
 # ARG BAGGER_FILE=${BAGGER_}.tar.gz
 # ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/${BAGGER_FILE}"
-ARG BAGGER_RELEASE="2.0.11"
+ARG BAGGER_RELEASE="2.0.12"
 ARG BAGGER_FILE=${BAGGER_RELEASE}.tar.gz
 ARG BAGGER_URL="https://github.com/cwrc/islandora_bagger/archive/refs/tags/${BAGGER_FILE}"
-ARG BAGGER_SHA256=a64fded2017accdd8f49045140249b590d664cab5177df20d83221b4be1b7d3c
+ARG BAGGER_SHA256=96759378e871e9b0eaff8e3dfddc3ad079bc2845a55d6af2f8c0cebf46c64d36
 
 RUN --mount=type=cache,id=bagger-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=bagger-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
